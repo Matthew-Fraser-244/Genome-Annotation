@@ -1,4 +1,4 @@
-__Fungal-Genome-Annotation__
+Fungal-Genome-Annotation
 This workflow provides a structured, user‑friendly approach to annotating fungal genomes using several established bioinformatic tools on the University of Brimingham's BlueBEAR HPC. Once a genome assembly is complete, you can use the pipeline to generate several kinds of informative annotations.
 
 ○ Gene structure and function annotations
