@@ -23,20 +23,21 @@ Before starting it is important to establish a structured file storage and namin
 Additionally, each job is given a specific name which represents the species sample used, eg. the specific isolate used or species grouping for the analysis. Examples such as 'Bsoro_Isolates' for analysis of several Bipolaris sorokinana isolates, or 'Bvictor_FI3' for analysis of the B. victoriae FI3 isolate. By creating a variable with this name, it can be easily attatched to output files while not needing to be manually re-named for each analysis. 
 
 The idea is to have your directories structured looking something like:
-/rds
-└── /projects
-    └── /p
-        └── /project_name
-            └── /Annotation_Pipeline
-                ├── Nucleotide_Sequences/
-                ├── AA_Sequences/
-                ├── /Annotations
-                |   ├── Genome_Annotations/
-                |   ├── Functional_Annotations/
-                |   ├── TE_Annotations/
-                |   ├── Starship_Annotations/
-                ├── Helixer/
-                ├── EarlGrey/
-                ├── eggNOG_Mapper/
-                ├── SignalP/
-                └── Starfish/
+#### The idea is to have your directories structured looking something like:
+#### /rds
+#### └── /projects
+####     └── /p
+####         └── /project_name
+####             └── /Annotation_Pipeline
+####                 ├── Nucleotide_Sequences/
+####                 ├── AA_Sequences/
+####                 ├── /Annotations
+####                 |   ├── Genome_Annotations/
+####                 |   ├── Functional_Annotations/
+####                 |   ├── TE_Annotations/
+####                 |   ├── Starship_Annotations/
+####                 ├── Helixer/
+####                 ├── EarlGrey/
+####                 ├── eggNOG_Mapper/
+####                 ├── SignalP/
+####                 └── Starfish/
