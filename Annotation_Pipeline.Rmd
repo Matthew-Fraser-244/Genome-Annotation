@@ -1,5 +1,5 @@
 ---
-title: "__Annoation Pipeline__"
+title: "__Fungal Genome Annoation Pipeline__"
 author: "By Matthew Fraser"
 output:
   html_notebook:
@@ -70,7 +70,6 @@ editor_options:
 #### Helixer is a tool for structural genome annotation. It utilizes Deep Neural Networks and a Hidden Markov Model to directly provide primary gene models in a gff3 file. It’s performant and applicable to a wide variety of genomes. However, users should be aware that this software is under ongoing development and improvements.
 
 #### __Github Page__: https://github.com/usadellab/Helixer; https://github.com/usadellab/HelixerPost
-#### __Manual__:  
 
 ### __Inputs Required__
 #### ○ Genome FASTA file
@@ -102,7 +101,7 @@ editor_options:
 ```{bash}
 # Set Variables
 HELIXER_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Genome_Annotation/Helixer"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="Example"
 
 # Change WD
 cd ${HELIXER_DIR}
@@ -123,9 +122,9 @@ nano Helixer_${SAMPLE_NAME}_Bash.sh
 
 # Set Variables for Directory, sample/species name, and Input/Output files
 HELIXER_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Genome_Annotation/Helixer"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="Example"
 
-INPUT_FASTA="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Nucelotide_Sequences/Other/${SAMPLE_NAME}.fasta"
+INPUT_FASTA="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Nucelotide_Sequences/Bsoro/${SAMPLE_NAME}.fasta"
 OUTPUT_GFF="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Genome_Annotation/Helixer/${SAMPLE_NAME}_Helixer.gff3"
 
 # Load required modules
@@ -163,7 +162,6 @@ sbatch Helixer_${SAMPLE_NAME}_Bash.sh
 #### Earl Grey is a full-automated transposable element (TE) annotation pipeline, leveraging the most widely-used tools and combining these with a consensus elongation process to better define de novo consensus sequences when annotating new genome assemblies.
 
 #### __Github Page__: https://github.com/TobyBaril/EarlGrey
-#### __Manual__:  
 
 ### __Inputs Required__
 #### ○ Genome FASTA file
@@ -189,7 +187,7 @@ sbatch Helixer_${SAMPLE_NAME}_Bash.sh
 #### Using Bash
 ```{bash}
 EARLGREY_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/TE_Annotation"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="Example"
 
 # Change WD
 cd ${EARLGREY_DIR}
@@ -200,7 +198,7 @@ nano EarlGrey_${SAMPLE_NAME}_Bash.sh
 
 ```{bash}
 #!/bin/bash
-#SBATCH --job-name=EarlGrey
+#SBATCH --job-name=EarlGrey_Bsoro_CS10
 #SBATCH --ntasks=1
 #SBATCH --mem=64G
 #SBATCH --cpus-per-task=32
@@ -211,10 +209,10 @@ set -e
 
 # Set Variables for Directory, sample/species name, Input file, Output path and database
 EARLGREY_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/TE_Annotation"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="Example"
 
-INPUT_FASTA="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Nucelotide_Sequences/Other/${SAMPLE_NAME}.fasta"
-OUTPUT_PATH="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/TE_Annotation/Example_Isolates"
+INPUT_FASTA="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Nucelotide_Sequences/Bsoro/${SAMPLE_NAME}.fasta"
+OUTPUT_PATH="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/TE_Annotation/Bsoro_Isolates"
 MYCOMOBILOME="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/TE_Annotation/MycoMobilome_v1.0/MycoMobilome_v1.0-allConsensus_TE_library.fasta"
 
 # Load modules
@@ -249,9 +247,11 @@ do
         $9 = attrs[1];
         for(i=2;i<=length(attrs);i++) $9 = $9 ";" attrs[i];
         print
-    }' "$file" > "${file%.gff}.uniqueIDs.gff"
+    }' "$file" > "${SAMPLE_NAME}_EarlGrey.gff"
 
 done
+
+# The output gff file will be in the ${SAMPLE_NAME}_EarlGrey -> ${SAMPLE_NAME}_summaryFiles directory
 
 ```
 
@@ -482,7 +482,6 @@ process {
 #### GFF/GTF utility providing format conversions, filtering, FASTA sequence extraction and more.
 
 #### __Github Page__: https://github.com/gpertea/gffread
-#### __Manual__: 
 
 ### __Inputs Required__
 #### Genome FASTA File
@@ -495,7 +494,7 @@ process {
 ### Generate required Protein CDS fastas using GFFread
 ```{bash}
 GFFREAD_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Sidequests/SignalP"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="IMI166173.contigs"
 
 # Change WD
 cd ${GFFREAD_DIR}
@@ -514,9 +513,9 @@ nano gffread_${SAMPLE_NAME}_Bash.sh
 
 # Set directories
 GFFREAD_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Sidequests/SignalP"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="IMI166173.contigs"
 
-INPUT_FASTA=/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Nucelotide_Sequences/Other/${SAMPLE_NAME}.fasta
+INPUT_FASTA=/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Nucelotide_Sequences/Bsoro/${SAMPLE_NAME}.fasta
 INPUT_GFF="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Genome_Annotation/Helixer/${SAMPLE_NAME}_Helixer.gff3"
 OUT_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/AA_Sequences/Other"
 mkdir -p $OUT_DIR
@@ -549,7 +548,6 @@ sbatch gffread_${SAMPLE_NAME}_Bash.sh
 #### EggNOG-mapper is a tool for fast functional annotation of novel sequences. It uses precomputed orthologous groups and phylogenies from the eggNOG database (http://eggnog5.embl.de) to transfer functional information from fine-grained orthologs only.
 
 #### __Github Page__: https://github.com/eggnogdb/eggnog-mapper
-#### __Manual__:  
 
 ### __Inputs Required__
 #### ○ Protein FASTA file
@@ -595,8 +593,8 @@ download_eggnog_data.py -d e5 --data_dir /rds/projects/m/mcdonamc-hgt-transposon
 
 ### Run eggNOG-mapper
 ```{bash}
-EGGNOG_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Functional_Annotation/Test_run"
-SAMPLE_NAME="mp040"
+EGGNOG_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Functional_Annotation/Bsoro_Isolates"
+SAMPLE_NAME="Example"
 
 # Change WD
 cd ${EGGNOG_DIR}
@@ -614,8 +612,8 @@ nano emapper_${SAMPLE_NAME}_Bash.sh
 #SBATCH --qos=bbdefault
 
 # Set directories
-EGGNOG_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Functional_Annotation/Test_run"
-SAMPLE_NAME="mp040"
+EGGNOG_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Functional_Annotation/Bsoro_Isolates"
+SAMPLE_NAME="IMI166173.contigs"
 
 INPUT_FASTA=/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/AA_Sequences/Other/${SAMPLE_NAME}_proteins.fasta
 INPUT_GFF=/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Genome_Annotation/Helixer/${SAMPLE_NAME}_Helixer.gff3
@@ -631,36 +629,6 @@ emapper.py \
   -o ${SAMPLE_NAME} \
   --cpu 32 \
   --override
-  
-# Create a gff file based on the annotations provided by the emapper.annotations file
-## Extracts CDS annotation information from input GFF file
-cut -f1 ${SAMPLE_NAME}.emapper.annotations | sort -u > eggnog_ids.txt
-awk '
-    BEGIN {
-        while ((getline < "eggnog_ids.txt") > 0) {
-            ids[$1] = 1
-        }
-    }
-    $3 == "CDS" {
-        match($9, /ID=([^;]+)/, arr)
-        id = arr[1]
-        if (ids[id]) {
-            print id, $1, $4, $5, $7
-        }
-    }
-' OFS="\t" ${INPUT_GFF} > Input_gff_ann_coords.tsv
-
-## Creates file combining CDS gff annotation information with emapper.annotations predictions
-echo "##gff-version 3" > $OUTPUT
-join -1 1 -2 1 <(sort -k1,1 "Input_gff_ann_coords.tsv") <(sort -k1,1 "${SAMPLE_NAME}.emapper.annotations") | \
-awk -F"\t" 'BEGIN {OFS="\t"}
-{
-    id=$1; contig=$2; start=$3; end=$4; strand=$5; cog=$7; go=$8; kegg=$9; pfam=$10; desc=$14
-    attrs="ID="id";Description="desc";COG="cog";GO="go";KEGG="kegg";PFAM="pfam
-    print contig, "eggNOG", "functional_annotation", start, end, ".", strand, ".", attrs
-}' >> "${SAMPLE_NAME}_eggnog.gff3"
-
-
 ```
 
 ```{bash}
@@ -672,20 +640,34 @@ sbatch emapper_${SAMPLE_NAME}_Bash.sh
 
 ```
 
+# View emapper.annotations File Generated
+```{r}
+library(readr)
+library(dplyr)
+library(data.table)
+
+# View emapper.annotations file
+
+setwd("~/Desktop/Matthew_data/Assembly/Bsoro_Isolates")
+
+emapper <- fread("IMI166173.contigs.emapper.annotations")
+
+view(emapper)
+
+```
+
 # __Signalling Peptide Prediction__
 ## __SignalP__
 ### __Description__
 #### Signal peptide prediction model based on a Bert protein language model encoder and a conditional random field (CRF) decoder.
 
 #### __Github Page__: https://github.com/fteufel/signalp-6.0
-#### __Manual__:  
 
 ### __Inputs Required__
 #### ○ Protein FASTA file
 
 ### __Outputs Produced__
 #### ○ Table of results featuring cleavage site positions and probabilities (prediction_results.txt)
-#### ○ gff file containing names of output singalling peptides and scores
 
 ### __Additional Notes__
 #### Like with eggNOG-mapper, SignalP requires input protien fasta files generated in a previous step. SignalP also requires a reference model, though unlike previous tools this model is present within BlueBEAR already and only needs to have the PATH to it pointed to in the script. As such, no additional files need to be present besides the input fasta file.
@@ -693,7 +675,7 @@ sbatch emapper_${SAMPLE_NAME}_Bash.sh
 ### Run SignalP
 ```{bash}
 SIGNALP_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Sidequests/SignalP"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="IMI166173.contigs"
 
 # Change WD
 cd ${SIGNALP_DIR}
@@ -712,7 +694,7 @@ nano SignalP_${SAMPLE_NAME}_Bash.sh
 
 # Set Directories
 SIGNALP_DIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Sidequests/SignalP"
-SAMPLE_NAME="mp040"
+SAMPLE_NAME="IMI166173.contigs"
 
 INPUT_FASTA=/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/AA_Sequences/Other/${SAMPLE_NAME}_proteins.fasta
 OUT_DIR=${SIGNALP_DIR}/Other
@@ -782,9 +764,9 @@ sbatch SignalP_${SAMPLE_NAME}_Bash.sh
 #### │── /assembly
 #### |   └── *.fasta
 #### |
-#### └── /gff
-####     │── *.gff
-####     └── clean_gffs.sh
+#### └── /gff3
+####     │── *.gff3
+####     └── clean_gff3s.sh
 
 ### __Set-up__
 ```{bash}
@@ -802,7 +784,7 @@ module load starfish/1.1.0-foss-2022a
 STARFISHDIR=$(dirname -- $(command -v -- starfish))/../
 
 # Change the following so that it represents the job name
-SAMPLE_NAME="Starfish_Test3" 
+SAMPLE_NAME="Bsoro_Isolates" 
 PREFIX="${SAMPLE_NAME}_tyr"
 
 # Change the following path so that it represents the desired path for output files
@@ -813,23 +795,23 @@ cd $PROJECTDIR
 mkdir -p $SAMPLE_NAME
 cd $SAMPLE_NAME
 mkdir -p assembly
-mkdir -p gff
+mkdir -p gff3
 mkdir -p ann
 
-# Copy in necessary data files for analysis, putting genome assemblies into 'assembly' folder, gff files into 'gff' folder, and emapper.annotations files in 'ann' folder
-# Add the 'clean_gffs.sh' script into the 'gff' directory and run it
-cd gff
-chmod +x clean_gffs.sh
-bash clean_gffs.sh
+# Copy in necessary data files for analysis, putting genome assemblies into 'assembly' folder, gff3 files into 'gff3' folder, and emapper.annotations files in 'ann' folder
+# Add the 'clean_gff3s.sh' script into the 'gff3' directory and run it
+cd gff3
+chmod +x clean_gff3s.sh
+bash clean_gff3s.sh
 cd ../
 
-# Create ome2*.txt files detailing the path to each genome's gff and genome assembly files
-# Change names of gff files 
+# Create ome2*.txt files detailing the path to each genome's gff3 and genome assembly files
+# Change names of gff3 files 
 realpath assembly/*.fasta | perl -pe 's/^(.+?([^\/]+?).fasta)$/\2\t\1/' > ome2assembly.txt
-realpath gff/*.gff | perl -pe 's/^(.+?([^\/]+?).gff)$/\2\t\1/' > ome2gff.txt
+realpath gff3/*.gff3 | perl -pe 's/^(.+?([^\/]+?).gff3)$/\2\t\1/' > ome2gff3.txt
 
-# Combine all gff files into single file if needed
-cat gff/*.gff > ${SAMPLE_NAME}.gff
+# Combine all gff3 files into single file if needed
+cat gff3/*.gff3 > ${SAMPLE_NAME}.gff3
 
 # Combine all assembly files into single file and then create BLAST database which features all sequences of interest for easy access
 # Creates fna files, another type of fasta featuring nucleotides
@@ -886,7 +868,7 @@ module load starfish/1.1.0-foss-2022a
 
 # Reload the objects
 STARFISHDIR=$(dirname -- $(command -v -- starfish))/../
-SAMPLE_NAME="Starfish_Test3" 
+SAMPLE_NAME="Bsoro_Isolates" 
 PREFIX="${SAMPLE_NAME}_tyr"
 PROJECTDIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annotation"
 
@@ -903,18 +885,18 @@ mkdir -p $BB_WORKDIR/geneFinder
 mkdir -p geneFinder
 
 # Starfish Annotate: De novo annotate YR genes in each genome assembly
-## Input: ome2.txt genome assembly and gff files
+## Input: ome2.txt genome assembly and gff3 files
 ## Input: HMM files for YR superfamilies, for validation of prediction (Provided with Starfish)
 ## Input: Amino Acid fasta files for YR superfamilies, for gene annotation (Provided with Starfish)
-## Added --targetFeat CDS to extract GFF annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
-## Added -n to specify the names for the annotations with the ID
+## Added --targetFeat CDS to extract gff3 annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+## Added -n to specify the names for the annotations with the ID (ensure consistent across starfish annotate, consolidate and sketch)
 ## Added 2>/dev/null to remove some warnings about ID which ultimately have no consequence printing them in the output slows down the process
-starfish annotate -T 32 -x ${PREFIX} -a ome2assembly.txt -g ome2gff.txt --targetFeat mRNA -n ID= -p $STARFISHDIR/db/YRsuperfams.p1-512.hmm -P $STARFISHDIR/db/YRsuperfamRefs.faa -i tyr -o $BB_WORKDIR/geneFinder/ 2>/dev/null
+starfish annotate -T 32 -x ${PREFIX} -a ome2assembly.txt -g ome2gff3.txt --targetFeat CDS -n ID= -p $STARFISHDIR/db/YRsuperfams.p1-512.hmm -P $STARFISHDIR/db/YRsuperfamRefs.faa -i tyr -o $BB_WORKDIR/geneFinder/ 2>/dev/null
 
 ##Output## found # new tyr genes and # tyr genes that overlap with ## existing genes
 
 # filt_intersect output files: Contains newly predicted genes and AA annotations
-# filt output files: Contains genes and AA with no new annotations, or if no gff provided
+# filt output files: Contains genes and AA with no new annotations, or if no gff3 provided
 
 # Detect filt_intersect or filt files created and set the type present to be used for subsequent analysis
 if ls $BB_WORKDIR/geneFinder/${PREFIX}.filt_intersect.* 1> /dev/null 2>&1; then
@@ -926,25 +908,25 @@ else
     exit 1
 fi
 
-# Starfish Consolidate: Combines new and old gene annotations into gff file
-## Input: existing gene annotations gff files
-## Input: newly annotated gff files
+# Starfish Consolidate: Combines new and old gene annotations into gff3 file
+## Input: existing gene annotations gff3 files
+## Input: newly annotated gff3 files
 ## Depending on whether filt or filt_intersect files were output, change the -G input 
-## Added --targetFeat CDS to extract GFF annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+## Added --targetFeat CDS to extract gff3 annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+## Added -n to specify the names for the annotations with the ID (ensure consistent across starfish annotate, consolidate and sketch)
 ## Added 2>/dev/null to remove some warnings about ID which ultimately have no consequence printing them in the output slows down the process 
-starfish consolidate -o $BB_WORKDIR/ -g $PROJECTDIR/${SAMPLE_NAME}/${SAMPLE_NAME}.gff -G $BB_WORKDIR/geneFinder/${TYR_FILT}.gff --targetFeat mRNA 2>/dev/null
+starfish consolidate -o $BB_WORKDIR/ -g $PROJECTDIR/${SAMPLE_NAME}/${SAMPLE_NAME}.gff3 -G $BB_WORKDIR/geneFinder/${TYR_FILT}.gff -n ID= --targetFeat CDS 2>/dev/null
 
-# Creates .txt featuring path to newly consolidated gff annotations
-realpath $BB_WORKDIR/${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > $BB_WORKDIR/ome2consolidatedGFF.txt
+# Creates .txt featuring path to newly consolidated gff3 annotations
+realpath $BB_WORKDIR/${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > $BB_WORKDIR/ome2consolidatedgff.txt
 
 # Starfish Sketch: Organise YR into neighbourhoods (Separations avoiding adjacent YR affecting analysis)
-## Input: Gene IDs of consodliated annotated genes in gff
+## Input: Gene IDs of consodliated annotated genes in gff3
 ## Input: .txt of gff file of consolidated gene annotations
-## Added --targetFeat CDS to extract GFF annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+## Added --targetFeat CDS to extract gff3 annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+## Added -n to specify the names for the annotations with the ID (ensure consistent across starfish annotate, consolidate and sketch)
 ## Added 2>/dev/null to remove some warnings about ID which ultimately have no consequence printing them in the output slows down the process
-starfish sketch -m 10000 -q $BB_WORKDIR/geneFinder/${TYR_FILT}.ids -g $BB_WORKDIR/ome2consolidatedGFF.txt -i s --targetFeat mRNA -x ${SAMPLE_NAME} -o $BB_WORKDIR/geneFinder/ 2>/dev/null
-
-### This step doesn't generate the bed files as intended, giving 0 neighbourhoods found. Need to figure out why there is this disparity from previous runs. This is also present when using the example data, whcih gave 10 in the step-by-step, but my run gives 9 neighbourhoods ###
+starfish sketch -m 10000 -q $BB_WORKDIR/geneFinder/${TYR_FILT}.ids -g $BB_WORKDIR/ome2consolidatedgff.txt -i s -n ID= --targetFeat CDS -x ${SAMPLE_NAME} -o $BB_WORKDIR/geneFinder/ 2>/dev/null
 
 ##Output## found ## neighborhoods containing input query genes
 
@@ -958,7 +940,7 @@ grep -P '\ttyr\t' $BB_WORKDIR/geneFinder/${SAMPLE_NAME}.bed > $BB_WORKDIR/geneFi
 cp -r $BB_WORKDIR/geneFinder \
   $PROJECTDIR/${SAMPLE_NAME}/
 cp \
-  $BB_WORKDIR/ome2consolidatedGFF.txt \
+  $BB_WORKDIR/ome2consolidatedgff.txt \
   $BB_WORKDIR/${TYR_FILT}.consolidated.gff \
   $PROJECTDIR/${SAMPLE_NAME}/
 
@@ -975,6 +957,12 @@ sbatch Starfish_${SAMPLE_NAME}_GeneFinder.sh
 
 ```
 
+```{bash}
+# Download geneFinder module Outputs from BlueBEAR
+scp -r frasermz@bluebear.bham.ac.uk:/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annotation/Bsoro_Isolates/geneFinder \
+"/Users/matthewfraser/Desktop/Matthew_data/Starship_Annotation/Bsoro_Isolates_test"
+```
+
 ```{r}
 # Visualise the content in the generated BED file
 # Run following chunk for table generation featuring coordinates of genes of interest from Gene Finder Module Analysis
@@ -983,16 +971,16 @@ library(dplyr)
 library(data.table)
 
 # Specify WD For Files
-setwd("~/Desktop/Matthew_data/Starship_Annotation/Starfish_Test3")
+setwd("~/Desktop/Matthew_data/Starship_Annotation/Bsoro_Isolates_test/geneFinder")
 
 # Code to read output
 # Change csv name to match File
-Starfish_Test3_geneFinder_Output <- fread("Starfish_Test3.tyr.bed")
+Bsoro_Isolates_geneFinder_Output <- fread("Bsoro_Isolates.tyr.bed")
 
 # Add names of columns so consistent and format works
-colnames(Starfish_Test3_geneFinder_Output) <- c("Contig ID","Gene Start","Gene End","Gene ID","Gene Name","Strand","Neighbourhood ID", "Attributes with ; Delimited Fields")
+colnames(Bsoro_Isolates_geneFinder_Output) <- c("Contig ID","Gene Start","Gene End","Gene ID","Gene Name","Strand","Neighbourhood ID", "Attributes with ; Delimited Fields")
 
-print(Starfish_Test3_geneFinder_Output)
+print(Bsoro_Isolates_geneFinder_Output)
 
 ```
 
@@ -1028,7 +1016,7 @@ module load starfish/1.1.0-foss-2022a
 
 # Reload the objects
 STARFISHDIR=$(dirname -- $(command -v -- starfish))/../
-SAMPLE_NAME="Starfish_Test3" 
+SAMPLE_NAME="Bsoro_Isolates" 
 PREFIX="${SAMPLE_NAME}_tyr"
 PROJECTDIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annotation"
 
@@ -1068,19 +1056,19 @@ starfish insert -T 32 -a ome2assembly.txt -d blastdb/${SAMPLE_NAME}.assemblies -
 # insert.bed output file: Contains coordinates of all predicted starship boundaries
 # insert.stats output file: Contains info on insertion sites for each boundary prediction
 
-# Re-create ome2consolidatedGFF.txt file with path based on most recent work directory
-realpath ${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > ome2consolidatedGFF.txt
+# Re-create ome2consolidatedgff.txt file with path based on most recent work directory
+realpath ${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > ome2consolidatedgff.txt
 
 # Starfish Summarise: Consolidate output of predicted starship boundaries
 ## Input: ome2assembly.txt file containing genome assemblies
 ## Input: insert.bed file containing coordinates of all predicted starship boundaries
 ## Input: insert.stats file containing info on insertion sites for each boundary prediction
-## Input: .txt of gff file of consolidated gene annotations
-## Input: filt.ids featuring IDs of consodliated annotated genes in gff
+## Input: .txt of gff3 file of consolidated gene annotations
+## Input: filt.ids featuring IDs of consodliated annotated genes in gff3
 ## Input: eggNOG mapper (emapper) gene annotation file
-## Input: Gene IDs of consodliated annotated genes in gff
-## Added --targetFeat CDS to extract GFF annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
-starfish summarize -a ome2assembly.txt -b $BB_WORKDIR/elementFinder/${SAMPLE_NAME}.insert.bed -x ${SAMPLE_NAME} -o $BB_WORKDIR/elementFinder/ -S $BB_WORKDIR/elementFinder/${SAMPLE_NAME}.insert.stats -g ome2consolidatedGFF.txt -A ann/${SAMPLE_NAME}.gene2emap.txt --targetFeat mRNA -t geneFinder/${TYR_FILT}.ids 
+## Input: Gene IDs of consodliated annotated genes in gff3
+## Added --targetFeat CDS to extract gff3 annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+starfish summarize -a ome2assembly.txt -b $BB_WORKDIR/elementFinder/${SAMPLE_NAME}.insert.bed -x ${SAMPLE_NAME} -o $BB_WORKDIR/elementFinder/ -S $BB_WORKDIR/elementFinder/${SAMPLE_NAME}.insert.stats -g ome2consolidatedgff.txt -A ann/${SAMPLE_NAME}.gene2emap.txt --targetFeat CDS -t geneFinder/${TYR_FILT}.ids 
 
 # elements.bed output file: Contains all captain, boundary, and gene features of predicted starships
 
@@ -1183,15 +1171,26 @@ mkdir -p pairViz
 ## Input: elements.named.stats file containing named insertion sites for starships
 starfish pair-viz -m all -t empty -T 32 -A nucmer -a ome2assembly.txt -b elementFinder/${SAMPLE_NAME}.elements.coloured.bed -S elementFinder/${SAMPLE_NAME}.elements.named.stats -o pairViz/
 
-## Added: Convert the elements.ann.feat file into a gff file that can be input into Geneious for viewing Starfish's predicted starship elements
+## Added: Convert the elements.ann.feat file into a gff3 file that can be input into Geneious for viewing Starfish's predicted starship elements
+# Creates single gff3 file first with all starships
 awk -F"\t" 'BEGIN {
     OFS="\t";
-    print "##gff-version 3"
+    print "##gff3-version 3"
 }
 NR>1 {contig=$4; start=$6; end=$7; strand=$9; id=$1; family=$2; captain=$5; boundary=$10; emptyID=$11; emptyBegin=$13; emptyEnd=$14;
 attrs="ID="id";Family="family";Captain="captain";Boundary="boundary";EmptySite="emptyID";EmptyBegin="emptyBegin";EmptyEnd="emptyEnd;
     print contig, "Starfish", "starship_element", start, end, ".", strand, ".", attrs
 }' elementFinder/${SAMPLE_NAME}.elements.ann.feat > elementFinder/${SAMPLE_NAME}_starfish.gff3
+
+# Separates based on 
+awk '
+  $0 ~ /^#/ { next } 
+  {
+    out = "elementFinder/" $1 ".gff3"
+    print >> out
+  }
+' elementFinder/${SAMPLE_NAME}_starfish.gff3
+
 
 ```
 
@@ -1203,45 +1202,55 @@ chmod +x Starfish_${SAMPLE_NAME}_ElementFinder.sh
 sbatch Starfish_${SAMPLE_NAME}_ElementFinder.sh
 ```
 
+```{bash}
+# Download elementFinder module Outputs from BlueBEAR
+scp -r frasermz@bluebear.bham.ac.uk:/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annotation/Bsoro_Isolates/elementFinder \
+"/Users/matthewfraser/Desktop/Matthew_data/Starship_Annotation/Bsoro_Isolates_test"
+
+# Download elementFinder module Outputs from BlueBEAR
+scp -r frasermz@bluebear.bham.ac.uk:/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annotation/Bsoro_Isolates/pairViz \
+"/Users/matthewfraser/Desktop/Matthew_data/Starship_Annotation/Bsoro_Isolates_test"
+```
+
 ```{r}
 # Obtain the output specified in the .elements.ann.feat file
 library(readr)
 library(dplyr)
 
 # Specify WD For Files
-setwd("~/Desktop/Matthew_data/Starship_Annotation/Starfish_Test3")
+setwd("~/Desktop/Matthew_data/Starship_Annotation/Bsoro_Isolates_test/elementFinder")
 
 # Read the elements.ann.feat file
-element_feat <- read.table("Starfish_Test3.elements.ann.feat", sep = "\t")
+element_feat <- read.table("Bsoro_Isolates.elements.ann.feat", sep = "\t")
 
 # Convert to CSV format
-write.csv(element_feat, "Starfish_Test3.elements.ann.csv", row.names = FALSE)
+write.csv(element_feat, "Bsoro_Isolates.elements.ann.csv", row.names = FALSE)
 
-Starfish_Test3_elements.ann <- read_csv("Starfish_Test3.elements.ann.csv", col_names = TRUE)
+Bsoro_Isolates_elements.ann <- read_csv("Bsoro_Isolates.elements.ann.csv", col_names = TRUE)
 
-colnames(Starfish_Test3_elements.ann) <- c("Element ID","Family ID","Navis-Haplotype ID","Contig ID","Captain ID","Start", "Stop", "Element Length", "Strand", "Boundary Type", "Empty Site ID","Empty Site Captain ID", "Empty Site Start", "Empty Site Stop", "DRs and TIRs")
+colnames(Bsoro_Isolates_elements.ann) <- c("Element ID","Family ID","Navis-Haplotype ID","Contig ID","Captain ID","Start", "Stop", "Element Length", "Strand", "Boundary Type", "Empty Site ID","Empty Site Captain ID", "Empty Site Start", "Empty Site Stop", "DRs and TIRs")
 
-colnames(Starfish_Test3_elements.ann) <- make.names(colnames(Starfish_Test3_elements.ann), unique = TRUE)
+colnames(Bsoro_Isolates_elements.ann) <- make.names(colnames(Bsoro_Isolates_elements.ann), unique = TRUE)
 
 # Filter the results based on Family, Haplotype, Navis etc
-# Starfish_Test3_elements.ann <- Starfish_Test3_elements.ann %>% filter(grepl("navis0002-hap0002", Starfish_Test3_elements.ann[[3]]))
+# Bsoro_Isolates_elements.ann <- Bsoro_Isolates_elements.ann %>% filter(grepl("navis0002-hap0002", Bsoro_Isolates_elements.ann[[3]]))
 
-Starfish_Test3_elements.ann
+Bsoro_Isolates_elements.ann
 
-# Obtain the output specified in the Starfish_Test3.elements.coloured.bed file
+# Obtain the output specified in the Bsoro_Isolates.elements.coloured.bed file
 # Read the element.feat file
-element_feat <- read.table("Starfish_Test3.elements.coloured.bed", sep = "\t")
+element_feat <- read.table("Bsoro_Isolates.elements.coloured.bed", sep = "\t")
 
 # Convert to CSV format
-write.csv(element_feat, "Starfish_Test3.elements.coloured.csv", row.names = FALSE)
+write.csv(element_feat, "Bsoro_Isolates.elements.coloured.csv", row.names = FALSE)
 
-Starfish_Test3.elements.coloured <- read_csv("Starfish_Test3.elements.coloured.csv", col_names = TRUE)
+Bsoro_Isolates.elements.coloured <- read_csv("Bsoro_Isolates.elements.coloured.csv", col_names = TRUE)
 
-colnames(Starfish_Test3.elements.coloured) <- c("Chromosome ID","Start","Stop","Feature ID","Feature Type","Strand", "Starship ID", "Annotation", "Colour")
+colnames(Bsoro_Isolates.elements.coloured) <- c("Chromosome ID","Start","Stop","Feature ID","Feature Type","Strand", "Starship ID", "Annotation", "Colour")
 
-colnames(Starfish_Test3.elements.coloured) <- make.names(colnames(Starfish_Test3.elements.coloured), unique = TRUE)
+colnames(Bsoro_Isolates.elements.coloured) <- make.names(colnames(Bsoro_Isolates.elements.coloured), unique = TRUE)
 
-Starfish_Test3.elements.coloured
+Bsoro_Isolates.elements.coloured
 
 ```
 
@@ -1276,7 +1285,7 @@ module load starfish/1.1.0-foss-2022a
 
 # Reload the objects
 STARFISHDIR=$(dirname -- $(command -v -- starfish))/../
-SAMPLE_NAME="Starfish_Test3" 
+SAMPLE_NAME="Bsoro_Isolates" 
 PREFIX="${SAMPLE_NAME}_tyr"
 PROJECTDIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annotation"
 
@@ -1285,6 +1294,19 @@ PROJECTDIR="/rds/projects/m/mcdonamc-hgt-transposons/Matthew_data/Starship_Annot
 BB_WORKDIR=$(mktemp -d /scratch/${USER}_${SLURM_JOBID}.XXXXXX)
 export TMPDIR=${BB_WORKDIR}
 mkdir -p $BB_WORKDIR/regionFinder
+
+if ls geneFinder/${PREFIX}.filt_intersect.* 1> /dev/null 2>&1; then
+    TYR_FILT=${PREFIX}.filt_intersect
+elif ls geneFinder/${PREFIX}.filt.* 1> /dev/null 2>&1; then
+    TYR_FILT=${PREFIX}.filt
+else
+    echo "ERROR: No filt or filt_intersect outputs found."
+    exit 1
+fi
+
+cd $PROJECTDIR
+mkdir -p $SAMPLE_NAME
+cd $SAMPLE_NAME
 
 # Set WD for files
 mkdir -p regionFinder
@@ -1305,8 +1327,8 @@ $STARFISHDIR/aux/filterOG.pl -O ann/${SAMPLE_NAME}.gene2og.mcl -a 1 -c 5 -o ann/
 
 ##Output## found 0 OGs absent from max 1 out of 38 genomes with max 5 copies in any given genome
 
-# Re-create ome2consolidatedGFF.txt file with path based on most recent work directory
-realpath ${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > ome2consolidatedGFF.txt
+# Re-create ome2consolidatedgff.txt file with path based on most recent work directory
+realpath ${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > ome2consolidatedgff.txt
 
 # Starfish Dereplicate: Group haplotypes into homologous genomic regions to identify independently segregating starship insertions
 ## Input: navis-hap.mcl file from previous step mcl analysis
@@ -1314,11 +1336,11 @@ realpath ${TYR_FILT}.consolidated.gff | perl -pe 's/^/${SAMPLE_NAME}\t/' > ome2c
 ## Input: elements.named.stats file containing named insertion sites for starships
 ## Input: elements.feat file containing metadata on starship element
 ## Input: gene2og.a.c.txt file of filtered genome and copy numbers created in previous step
-## Input: ome2gff.txt file featuring the absolute path to each genome's gff
-## Added --targetFeat CDS to extract GFF annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
+## Input: ome2gff3.txt file featuring the absolute path to each genome's gff3
+## Added --targetFeat CDS to extract gff3 annotation info from CDS rather than mRNA, to be more consistent with emapper annotations
 ## Adjusted --flanking to 1, making the search less stringent
 ## If filtering for homologous regions does not provide any output, use unfiltered gene2og.txt instead
-starfish dereplicate -e elementFinder/${SAMPLE_NAME}.element.navis-hap.mcl -t $BB_WORKDIR/regionFinder/unaffiliated_tyrs.bed -F elementFinder/${SAMPLE_NAME}.elements.feat -S elementFinder/${SAMPLE_NAME}.elements.named.stats -O ann/${SAMPLE_NAME}.gene2og.txt -g ome2gff.txt --targetFeat mRNA -x ${SAMPLE_NAME} -o $BB_WORKDIR/regionFinder/ --flanking 1 --mismatching 1
+starfish dereplicate -e elementFinder/${SAMPLE_NAME}.element.navis-hap.mcl -t $BB_WORKDIR/regionFinder/unaffiliated_tyrs.bed -F elementFinder/${SAMPLE_NAME}.elements.feat -S elementFinder/${SAMPLE_NAME}.elements.named.stats -O ann/${SAMPLE_NAME}.gene2og.txt -g ome2gff3.txt --targetFeat CDS -x ${SAMPLE_NAME} -o $BB_WORKDIR/regionFinder/ --flanking 1 --mismatching 1
 
 ##Output## 
 ## found ## regions with at least 1 cross-referenced element-insertion site pair
@@ -1348,12 +1370,12 @@ mkdir locusViz
 ## Input: elements.bed file featuring  captain, boundary, and gene features of predicted starships
 ## Input: regions.txt file containing info about the element, empty, and fragmented haplotypes found in each region 
 ## Input dereplicated.txt file 
-## Input: ome2consolidatedGFF.txt file 
+## Input: ome2consolidatedgff.txt file 
 ## Input: filt.ids
 ## Input: .sim file with pairwise jaccard similarities between different regions and haplotypes
 ## Input: gcContent_w.bed file containing info on %GC content 
 ## Added -n 'Name=' to get the feature names for annotations
-starfish locus-viz -T 32 -m region -a ome2assembly.txt -b elementFinder/${SAMPLE_NAME}.elements.bed -x ${SAMPLE_NAME} -o locusViz/ -A nucmer -r $BB_WORKDIR/regionFinder/${SAMPLE_NAME}.fog1.d600000.m1.regions.txt -d $BB_WORKDIR/regionFinder/${SAMPLE_NAME}.fog1.d600000.m1.dereplicated.txt -j $BB_WORKDIR/regionFinder/${SAMPLE_NAME}.fog1.d600000.m1.haplotype_jaccard.sim  -g ome2consolidatedGFF.txt --tags geneFinder/${TYR_FILT}.ids --gc ${SAMPLE_NAME}.assemblies.gcContent_w1000.bed --targetFeat mRNA -n 'Name=' 
+starfish locus-viz -T 32 -m region -a ome2assembly.txt -b elementFinder/${SAMPLE_NAME}.elements.bed -x ${SAMPLE_NAME} -o locusViz/ -A nucmer -r $BB_WORKDIR/regionFinder/${SAMPLE_NAME}.fog1.d600000.m1.regions.txt -d $BB_WORKDIR/regionFinder/${SAMPLE_NAME}.fog1.d600000.m1.dereplicated.txt -j $BB_WORKDIR/regionFinder/${SAMPLE_NAME}.fog1.d600000.m1.haplotype_jaccard.sim  -g ome2consolidatedgff.txt --tags geneFinder/${TYR_FILT}.ids --gc ${SAMPLE_NAME}.assemblies.gcContent_w1000.bed --targetFeat CDS -n 'Name=' 
 
 # genes.config output file: All genes surrounding the predicted Starship element region
 # seqs.config output file: Sequence and flanking DR/TIR information for each predicted Starship. This is not generated correctly for some reason
@@ -1361,15 +1383,16 @@ starfish locus-viz -T 32 -m region -a ome2assembly.txt -b elementFinder/${SAMPLE
 # links.filt.tsv output file: Pairwise links between each predicted Starship within the region
 # gc.config output file: GC content of the predicted Starships and surrounding region
 
-
 # Copy results back to the project directory 
 cp -r $BB_WORKDIR/regionFinder \
   $PROJECTDIR/${SAMPLE_NAME}/
-  
+
 # Remove temporary work directory (should only be done once you are finished with job and all files are copied across to profile directory, otherwise files generated will be lost forever!!!)
 rm -rf $BB_WORKDIR
 
-# Locus-Viz produces files that are suitable for pairwise nucmer alignments. Alternatively, can use the code below to 
+# Locus-Viz produces files that are suitable for pairwise nucmer pairwise alignments of all the predicted elements in a single region. This also produces an R file for generating this alignment found within the output file. 
+
+# The files which are generated include those specified above, however for some reason each test I have done has not generated the seqs.config file correctly, meaning this needs to be manually created with the coordinates of the predicted Starships if you want to produce this. Otherwise, I would recommend you can do LASTZ alignments using the region that is annotated in the output gff3 from Element Finder.
 
 ```
 
@@ -1400,11 +1423,11 @@ library(ggnewscale)
 
 # The seqs.config file generated does not appear to load properly or contain all the correct parameters needed, so need to create own file.  
 
-regionGenes = utils::read.table("Starfish_Test3.region0001.genes.config", header = T, sep = '	')
-regionSeqs = read_csv("Starfish_Test3.region0001.seqs.config", col_names = TRUE)
-regionFeats = utils::read.table("Starfish_Test3.region0001.feats.config", header = T, sep = '	')
-linkFeats = read_links("Starfish_Test3.region0001.links.filt.tsv", format = 'blast')
-regionGC <- read_bed("Starfish_Test3.region0001.gc.config")
+regionGenes = utils::read.table("Bsoro_Isolates.region0001.genes.config", header = T, sep = '	')
+regionSeqs = read_csv("Bsoro_Isolates.region0001.seqs.config", col_names = TRUE)
+regionFeats = utils::read.table("Bsoro_Isolates.region0001.feats.config", header = T, sep = '	')
+linkFeats = read_links("Bsoro_Isolates.region0001.links.filt.tsv", format = 'blast')
+regionGC <- read_bed("Bsoro_Isolates.region0001.gc.config")
 
 
 view(regionGenes)
@@ -1421,7 +1444,7 @@ if (!"type" %in% colnames(regionGenes) || any(is.na(regionGenes$type))) {
 
 # Manually create the regionSeqs file containing the lengths of the sequences as it was not created properly prior.
 
-# Edit the names of certain genes that were annotated in other gffs but not detected, so can be annotated on plot.
+# Edit the names of certain genes that were annotated in other gff3s but not detected, so can be annotated on plot.
 regionGenes$name[regionGenes$feat_id == "HaT_Transposase"] <- "HaT"
 
 regionGenes
@@ -1449,6 +1472,6 @@ print(nucmer_plot)
 
 # __What Can I Do Next?__
 ### __Viewing All Annotations In Geneious__
-#### Once you have performed the desired analysis, the generated gff file can be input into Geneious Prime for viewing with the input Genome. Because the files were all generated based on the same Genome FASTA file and the naming convention was kept consistent throughout, Geneious will recognise that these annotations are for the specific Genome used. 
+#### Once you have performed the desired analysis, the generated gff3 file can be input into Geneious Prime for viewing with the input Genome. Because the files were all generated based on the same Genome FASTA file and the naming convention was kept consistent throughout, Geneious will recognise that these annotations are for the specific Genome used. 
 
-#### Each different file will be added as a different 'track' within Geneious, making it easier to differentiate which annotations are from which source. Then you can compare the annotations to see if there is any overlap, whether there are sepcific TEs or Starships you are looking for etc. You can then remove any annotations you don't want to keep, and then export all the others as a single gff annotations file. 
+#### Each different file will be added as a different 'track' within Geneious, making it easier to differentiate which annotations are from which source. Then you can compare the annotations to see if there is any overlap, whether there are sepcific TEs or Starships you are looking for etc. You can then remove any annotations you don't want to keep, and then export all the others as a single gff3 annotations file. 
